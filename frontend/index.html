@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeSci Platform - 去中心化学术平台</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-microscope"></i>
+                <h1>DeSci Platform</h1>
+            </div>
+            <div class="connection-status" id="connectionStatus">
+                <i class="fas fa-circle-notch fa-spin"></i>
+                <span>连接中...</span>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt"></i> 仪表板
+            </button>
+            <button class="tab-btn" data-tab="profile">
+                <i class="fas fa-user"></i> 用户档案
+            </button>
+            <button class="tab-btn" data-tab="research">
+                <i class="fas fa-flask"></i> 研究发布
+            </button>
+            <button class="tab-btn" data-tab="review">
+                <i class="fas fa-clipboard-check"></i> 同行评议
+            </button>
+            <button class="tab-btn" data-tab="nft">
+                <i class="fas fa-certificate"></i> NFT收藏
+            </button>
+        </nav>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalUsers">-</h3>
+                        <p>注册用户</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalProofs">-</h3>
+                        <p>ZK证明</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalNFTs">-</h3>
+                        <p>研究NFT</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalDatasets">-</h3>
+                        <p>数据集</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h2><i class="fas fa-clock"></i> 最近活动</h2>
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>加载中...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div class="tab-content" id="profile">
+            <div class="form-section">
+                <h2><i class="fas fa-user-plus"></i> 创建用户档案</h2>
+                <form id="profileForm" class="form">
+                    <div class="form-group">
+                        <label for="fullName">姓名</label>
+                        <input type="text" id="fullName" placeholder="请输入您的姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">年龄</label>
+                        <input type="number" id="age" placeholder="请输入年龄" min="18" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" placeholder="请输入邮箱地址" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ipfsHash">IPFS哈希 (可选)</label>
+                        <input type="text" id="ipfsHash" placeholder="QmXXXXXX...">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> 创建档案
+                    </button>
+                </form>
+            </div>
+
+            <div class="profile-info" id="profileInfo" style="display: none;">
+                <h2><i class="fas fa-id-card"></i> 我的档案</h2>
+                <div class="info-card">
+                    <div class="info-item">
+                        <strong>姓名:</strong> <span id="profileName">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>邮箱:</strong> <span id="profileEmail">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>验证状态:</strong> 
+                        <span id="profileVerified" class="status">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>声誉值:</strong> <span id="profileReputation">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Research Tab -->
+        <div class="tab-content" id="research">
+            <div class="form-section">
+                <h2><i class="fas fa-flask"></i> 发布研究</h2>
+                <form id="researchForm" class="form">
+                    <div class="form-group">
+                        <label for="researchTitle">研究标题</label>
+                        <input type="text" id="researchTitle" placeholder="请输入研究标题" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="researchDesc">研究描述</label>
+                        <textarea id="researchDesc" placeholder="请描述您的研究内容" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="datasetName">数据集名称</label>
+                        <input type="text" id="datasetName" placeholder="数据集名称" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="datasetDesc">数据集描述</label>
+                        <textarea id="datasetDesc" placeholder="数据集描述" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="isPublicDataset" checked>
+                            公开数据集
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> 发布研究
+                    </button>
+                </form>
+            </div>
+
+            <div class="research-list">
+                <h2><i class="fas fa-list"></i> 研究列表</h2>
+                <div id="researchList" class="research-items">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>加载中...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Tab -->
+        <div class="tab-content" id="review">
+            <div class="review-section">
+                <h2><i class="fas fa-clipboard-check"></i> 同行评议</h2>
+                <div id="reviewList" class="review-items">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>加载待评议研究...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NFT Tab -->
+        <div class="tab-content" id="nft">
+            <div class="nft-section">
+                <h2><i class="fas fa-certificate"></i> 我的研究NFT</h2>
+                <div id="nftList" class="nft-grid">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>加载NFT收藏...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner">
+                <i class="fas fa-circle-notch fa-spin"></i>
+                <p>处理中...</p>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
