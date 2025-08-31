@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeSci修复验证页面</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { border-color: #4CAF50; background-color: #f8fff8; }
+        .error { border-color: #f44336; background-color: #fff8f8; }
+        .warning { border-color: #ff9800; background-color: #fffef8; }
+        .info { border-color: #2196F3; background-color: #f8faff; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 3px; cursor: pointer; }
+        .btn-primary { background: #2196F3; color: white; }
+        .btn-success { background: #4CAF50; color: white; }
+        .btn-warning { background: #ff9800; color: white; }
+        .btn-info { background: #9c27b0; color: white; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; max-height: 200px; }
+        .summary { background: #e3f2fd; padding: 15px; border-radius: 5px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🚀 DeSci平台修复验证</h1>
+
+    <div class="summary">
+        <h3>✅ 已修复的问题</h3>
+        <ul>
+            <li><strong>Ethers.js加载问题</strong> - 添加了多重备用加载策略</li>
+            <li><strong>合约调用解码错误</strong> - 使用Promise.allSettled处理失败</li>
+            <li><strong>Gas价格获取失败</strong> - 添加了getFeeData备用方法</li>
+            <li><strong>演示脚本bind错误</strong> - 修复了方法名称不匹配</li>
+            <li><strong>用户档案检查失败</strong> - 添加了完善的错误处理</li>
+        </ul>
+    </div>
+
+    <div id="ethers-test" class="test-section success">
+        <h3>🔗 Ethers.js 加载状态</h3>
+        <div id="ethers-status">正在检查...</div>
+        <button onclick="testEthers()">重新测试 Ethers.js</button>
+    </div>
+
+    <div id="contract-test" class="test-section info">
+        <h3>📋 合约调用测试</h3>
+        <div id="contract-status">等待测试...</div>
+        <button onclick="testContracts()">测试合约调用</button>
+    </div>
+
+    <div id="provider-test" class="test-section warning">
+        <h3>🌐 Provider 测试</h3>
+        <div id="provider-status">等待测试...</div>
+        <button onclick="testProvider()">测试 Provider</button>
+    </div>
+
+    <div id="demo-test" class="test-section success">
+        <h3>🎬 演示脚本测试</h3>
+        <div id="demo-status">等待测试...</div>
+        <button onclick="testDemoScript()">测试演示脚本</button>
+    </div>
+
+    <div id="comprehensive-test" class="test-section info">
+        <h3>🔍 综合测试</h3>
+        <div id="comprehensive-status">等待测试...</div>
+        <button onclick="runComprehensiveTest()">运行综合测试</button>
+    </div>
+
+    <div id="results" class="test-section">
+        <h3>📊 测试结果</h3>
+        <pre id="test-results">暂无测试结果</pre>
+    </div>
+
+    <!-- Ethers.js Library with Robust Fallback -->
+    <script>
+        // 检测是否已有ethers.js
+        if (typeof window.ethers !== 'undefined') {
+            console.log('Ethers.js already loaded');
+            updateTestStatus('ethers-test', 'success', 'Ethers.js 已加载');
+        } else {
+            // 使用异步加载避免document.write阻塞
+            console.log('Loading ethers.js from CDN...');
+            updateTestStatus('ethers-test', 'warning', '正在加载 Ethers.js...');
+            loadEthersFromCDN();
+        }
+
+        function loadEthersFromCDN() {
+            var script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/ethers/6.8.0/ethers.umd.min.js';
+            script.onload = function() {
+                console.log('Ethers.js loaded from CDN successfully');
+                window.ethersLoaded = true;
+                updateTestStatus('ethers-test', 'success', 'Ethers.js 已从 CDN 加载成功');
+            };
+            script.onerror = function() {
+                console.warn('CDN ethers.js failed, trying alternative...');
+                updateTestStatus('ethers-test', 'warning', 'CDN 加载失败，尝试备用 CDN...');
+                loadEthersAlternative();
+            };
+            document.head.appendChild(script);
+        }
+
+        function loadEthersAlternative() {
+            var script = document.createElement('script');
+            script.src = 'https://unpkg.com/ethers@6.8.0/dist/ethers.umd.min.js';
+            script.onload = function() {
+                console.log('Ethers.js loaded from alternative CDN successfully');
+                window.ethersLoaded = true;
+                updateTestStatus('ethers-test', 'success', 'Ethers.js 已从备用 CDN 加载成功');
+            };
+            script.onerror = function() {
+                console.warn('Alternative CDN failed, using local fallback...');
+                updateTestStatus('ethers-test', 'warning', '备用 CDN 也失败，使用本地文件...');
+                loadEthersLocal();
+            };
+            document.head.appendChild(script);
+        }
+
+        function loadEthersLocal() {
+            var script = document.createElement('script');
+            script.src = 'ethers-local.umd.min.js';
+            script.onload = function() {
+                console.log('Ethers.js loaded from local file successfully');
+                window.ethersLoaded = true;
+                updateTestStatus('ethers-test', 'success', 'Ethers.js 已从本地文件加载成功');
+            };
+            script.onerror = function() {
+                console.error('All ethers.js loading methods failed!');
+                window.ethersLoaded = false;
+                updateTestStatus('ethers-test', 'error', '所有加载方法都失败了！');
+            };
+            document.head.appendChild(script);
+        }
+
+        function updateTestStatus(testId, status, message) {
+            const element = document.getElementById(testId);
+            const statusDiv = element.querySelector('div');
+
+            // 移除所有状态类
+            element.className = element.className.replace(/\b(success|error|warning|info)\b/g, '');
+            element.classList.add(status);
+
+            statusDiv.innerHTML = message;
+        }
+
+        function testEthers() {
+            let result = '🔍 Ethers.js 测试结果:\n\n';
+
+            if (typeof window.ethers === 'undefined') {
+                result += '❌ Ethers.js 未加载\n';
+                updateTestStatus('ethers-test', 'error', 'Ethers.js 未加载');
+                return;
+            }
+
+            result += '✅ Ethers.js 已加载\n';
+            result += `版本: ${window.ethers.version || 'unknown'}\n`;
+            result += `BrowserProvider: ${typeof window.ethers.BrowserProvider}\n`;
+            result += `Contract: ${typeof window.ethers.Contract}\n`;
+            result += `formatUnits: ${typeof window.ethers.formatUnits}\n`;
+            result += `parseUnits: ${typeof window.ethers.parseUnits}\n`;
+
+            updateTestStatus('ethers-test', 'success', 'Ethers.js 测试通过');
+            document.getElementById('test-results').textContent = result;
+        }
+
+        async function testProvider() {
+            try {
+                updateTestStatus('provider-test', 'warning', '正在测试 Provider...');
+
+                if (!window.ethereum) {
+                    updateTestStatus('provider-test', 'error', '未检测到 MetaMask 或其他 Web3 钱包');
+                    return;
+                }
+
+                const provider = new window.ethers.BrowserProvider(window.ethereum);
+                const network = await provider.getNetwork();
+                const blockNumber = await provider.getBlockNumber();
+
+                updateTestStatus('provider-test', 'success', `
+                    <strong>Provider 测试成功!</strong><br>
+                    网络: ${network.name} (${network.chainId})<br>
+                    当前区块: ${blockNumber}
+                `);
+
+                window.testProvider = provider;
+            } catch (error) {
+                updateTestStatus('provider-test', 'error', `Provider 测试失败: ${error.message}`);
+                console.error('Provider test error:', error);
+            }
+        }
+
+        async function testContracts() {
+            try {
+                updateTestStatus('contract-test', 'warning', '正在测试合约调用...');
+
+                if (!window.testProvider) {
+                    updateTestStatus('contract-test', 'error', '请先运行 Provider 测试');
+                    return;
+                }
+
+                // 模拟合约地址（实际测试中应该使用真实的合约地址）
+                const mockContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+                const mockAbi = [
+                    {
+                        "inputs": [],
+                        "name": "getTotalUsers",
+                        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                        "stateMutability": "view",
+                        "type": "function"
+                    }
+                ];
+
+                const contract = new window.ethers.Contract(mockContractAddress, mockAbi, window.testProvider);
+
+                // 测试合约调用（这可能会失败，但我们想要测试错误处理）
+                try {
+                    const result = await contract.getTotalUsers();
+                    updateTestStatus('contract-test', 'success', `合约调用成功: ${result}`);
+                } catch (contractError) {
+                    updateTestStatus('contract-test', 'warning', `合约调用失败（如预期）: ${contractError.message}<br><small>这是正常的，因为测试使用的是模拟地址</small>`);
+                }
+
+            } catch (error) {
+                updateTestStatus('contract-test', 'error', `合约测试失败: ${error.message}`);
+                console.error('Contract test error:', error);
+            }
+        }
+
+        function testDemoScript() {
+            try {
+                updateTestStatus('demo-test', 'warning', '正在测试演示脚本...');
+
+                // 检查演示类是否存在
+                if (typeof DeSciDemo === 'undefined') {
+                    updateTestStatus('demo-test', 'error', 'DeSciDemo 类未找到');
+                    return;
+                }
+
+                // 创建演示实例
+                const demo = new DeSciDemo();
+
+                // 检查必要的方法
+                const requiredMethods = ['startDemo', 'stopDemo', 'runDemoSequence', 'getStatus'];
+                const missingMethods = requiredMethods.filter(method => typeof demo[method] !== 'function');
+
+                if (missingMethods.length > 0) {
+                    updateTestStatus('demo-test', 'error', `缺少方法: ${missingMethods.join(', ')}`);
+                    return;
+                }
+
+                updateTestStatus('demo-test', 'success', '演示脚本测试通过，所有方法都存在');
+
+            } catch (error) {
+                updateTestStatus('demo-test', 'error', `演示脚本测试失败: ${error.message}`);
+                console.error('Demo script test error:', error);
+            }
+        }
+
+        async function runComprehensiveTest() {
+            updateTestStatus('comprehensive-test', 'warning', '正在运行综合测试...');
+
+            let results = [];
+            let passed = 0;
+            let total = 4;
+
+            // 测试1: Ethers.js
+            if (typeof window.ethers !== 'undefined') {
+                results.push('✅ Ethers.js 加载成功');
+                passed++;
+            } else {
+                results.push('❌ Ethers.js 加载失败');
+            }
+
+            // 测试2: Provider
+            try {
+                if (window.ethereum) {
+                    const provider = new window.ethers.BrowserProvider(window.ethereum);
+                    await provider.getNetwork();
+                    results.push('✅ Provider 创建成功');
+                    passed++;
+                } else {
+                    results.push('⚠️ 未检测到Web3钱包');
+                }
+            } catch (error) {
+                results.push('❌ Provider 创建失败');
+            }
+
+            // 测试3: 演示脚本
+            if (typeof DeSciDemo !== 'undefined') {
+                results.push('✅ 演示脚本加载成功');
+                passed++;
+            } else {
+                results.push('❌ 演示脚本加载失败');
+            }
+
+            // 测试4: 合约对象
+            if (typeof window.ethers !== 'undefined' && typeof window.ethers.Contract !== 'undefined') {
+                results.push('✅ 合约类可用');
+                passed++;
+            } else {
+                results.push('❌ 合约类不可用');
+            }
+
+            const summary = `综合测试完成: ${passed}/${total} 项通过\n\n` + results.join('\n');
+            document.getElementById('test-results').textContent = summary;
+
+            if (passed === total) {
+                updateTestStatus('comprehensive-test', 'success', `🎉 所有测试通过! (${passed}/${total})`);
+            } else if (passed >= total * 0.75) {
+                updateTestStatus('comprehensive-test', 'warning', `⚠️ 大部分测试通过 (${passed}/${total})`);
+            } else {
+                updateTestStatus('comprehensive-test', 'error', `❌ 测试失败过多 (${passed}/${total})`);
+            }
+        }
+
+        // 自动运行基本测试
+        setTimeout(function() {
+            if (typeof window.ethers !== 'undefined') {
+                testEthers();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

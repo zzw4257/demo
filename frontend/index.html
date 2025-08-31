@@ -10,10 +10,11 @@
 <body>
     <div class="container">
         <!-- Header -->
-        <header class="header">
+        <header class="header animate-fade-in-up">
             <div class="logo">
-                <i class="fas fa-microscope"></i>
+                <i class="fas fa-microscope animate-pulse-glow"></i>
                 <h1>DeSci Platform</h1>
+                <span class="subtitle">去中心化科学研究平台</span>
             </div>
             <div class="connection-status" id="connectionStatus">
                 <i class="fas fa-circle-notch fa-spin"></i>
@@ -22,46 +23,58 @@
         </header>
 
         <!-- Navigation -->
-        <nav class="nav-tabs">
-            <button class="tab-btn active" data-tab="dashboard">
-                <i class="fas fa-tachometer-alt"></i> 仪表板
+        <nav class="nav-tabs animate-slide-in-left">
+            <button class="tab-btn active animate-bounce-in" data-tab="dashboard" style="animation-delay: 0.1s;">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>仪表板</span>
             </button>
-            <button class="tab-btn" data-tab="profile">
-                <i class="fas fa-user"></i> 用户档案
+            <button class="tab-btn animate-bounce-in" data-tab="research" style="animation-delay: 0.2s;">
+                <i class="fas fa-flask"></i>
+                <span>研究发布</span>
             </button>
-            <button class="tab-btn" data-tab="research">
-                <i class="fas fa-flask"></i> 研究发布
+            <button class="tab-btn animate-bounce-in" data-tab="profile" style="animation-delay: 0.3s;">
+                <i class="fas fa-user"></i>
+                <span>用户档案</span>
             </button>
-            <button class="tab-btn" data-tab="review">
-                <i class="fas fa-clipboard-check"></i> 同行评议
+            <button class="tab-btn animate-bounce-in" data-tab="blockchain" style="animation-delay: 0.4s;">
+                <i class="fas fa-link"></i>
+                <span>区块链状态</span>
             </button>
-            <button class="tab-btn" data-tab="nft">
-                <i class="fas fa-certificate"></i> NFT收藏
+            <button class="tab-btn animate-bounce-in" data-tab="analytics" style="animation-delay: 0.5s;">
+                <i class="fas fa-chart-bar"></i>
+                <span>数据概览</span>
             </button>
         </nav>
 
         <!-- Dashboard Tab -->
-        <div class="tab-content active" id="dashboard">
+        <div class="tab-content active" id="dashboard" style="display: block;">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h2><i class="fas fa-microscope"></i> 欢迎使用 DeSci 平台</h2>
+                <p class="welcome-description">基于区块链的去中心化科学研究平台，为科研工作者提供安全、透明、可验证的学术环境</p>
+            </div>
+
+            <!-- Key Metrics -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card animate-fade-in-up" style="animation-delay: 0.1s;">
                     <div class="stat-icon">
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="stat-info">
                         <h3 id="totalUsers">-</h3>
-                        <p>注册用户</p>
+                        <p>注册研究者</p>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card animate-fade-in-up" style="animation-delay: 0.2s;">
                     <div class="stat-icon">
-                        <i class="fas fa-shield-alt"></i>
+                        <i class="fas fa-flask"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="totalProofs">-</h3>
-                        <p>ZK证明</p>
+                        <h3 id="totalResearches">-</h3>
+                        <p>已发表研究</p>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card animate-fade-in-up" style="animation-delay: 0.3s;">
                     <div class="stat-icon">
                         <i class="fas fa-certificate"></i>
                     </div>
@@ -70,158 +83,593 @@
                         <p>研究NFT</p>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card animate-fade-in-up" style="animation-delay: 0.4s;">
                     <div class="stat-icon">
-                        <i class="fas fa-database"></i>
+                        <i class="fas fa-shield-alt"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="totalDatasets">-</h3>
-                        <p>数据集</p>
+                        <h3 id="totalProofs">-</h3>
+                        <p>验证证明</p>
                     </div>
                 </div>
             </div>
 
-            <div class="recent-activity">
-                <h2><i class="fas fa-clock"></i> 最近活动</h2>
-                <div class="activity-list" id="activityList">
-                    <div class="activity-item">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <span>加载中...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Tab -->
-        <div class="tab-content" id="profile">
-            <div class="form-section">
-                <h2><i class="fas fa-user-plus"></i> 创建用户档案</h2>
-                <form id="profileForm" class="form">
-                    <div class="form-group">
-                        <label for="fullName">姓名</label>
-                        <input type="text" id="fullName" placeholder="请输入您的姓名" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="age">年龄</label>
-                        <input type="number" id="age" placeholder="请输入年龄" min="18" max="100" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">邮箱</label>
-                        <input type="email" id="email" placeholder="请输入邮箱地址" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="ipfsHash">IPFS哈希 (可选)</label>
-                        <input type="text" id="ipfsHash" placeholder="QmXXXXXX...">
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i> 创建档案
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3><i class="fas fa-bolt"></i> 快速操作</h3>
+                <div class="action-buttons">
+                    <button class="action-btn primary" onclick="switchTab('research')">
+                        <i class="fas fa-plus"></i>
+                        <span>发布研究</span>
                     </button>
-                </form>
+                    <button class="action-btn secondary" onclick="switchTab('blockchain')">
+                        <i class="fas fa-eye"></i>
+                        <span>查看区块链</span>
+                    </button>
+                    <button class="action-btn secondary" onclick="switchTab('analytics')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>数据概览</span>
+                    </button>
+                </div>
             </div>
 
-            <div class="profile-info" id="profileInfo" style="display: none;">
-                <h2><i class="fas fa-id-card"></i> 我的档案</h2>
-                <div class="info-card">
-                    <div class="info-item">
-                        <strong>姓名:</strong> <span id="profileName">-</span>
+            <!-- System Status -->
+            <div class="system-status">
+                <h3><i class="fas fa-heartbeat"></i> 系统状态</h3>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <span class="status-label">区块链连接</span>
+                        <span class="status-value" id="blockchainStatus">
+                            <i class="fas fa-circle status-online"></i>
+                            已连接
+                        </span>
                     </div>
-                    <div class="info-item">
-                        <strong>邮箱:</strong> <span id="profileEmail">-</span>
+                    <div class="status-item">
+                        <span class="status-label">API服务</span>
+                        <span class="status-value" id="apiStatus">
+                            <i class="fas fa-circle status-online"></i>
+                            正常
+                        </span>
                     </div>
-                    <div class="info-item">
-                        <strong>验证状态:</strong> 
-                        <span id="profileVerified" class="status">-</span>
+                    <div class="status-item">
+                        <span class="status-label">数据同步</span>
+                        <span class="status-value" id="syncStatus">
+                            <i class="fas fa-circle status-good"></i>
+                            最新
+                        </span>
                     </div>
-                    <div class="info-item">
-                        <strong>声誉值:</strong> <span id="profileReputation">-</span>
+                </div>
+            </div>
+
+            <!-- User Profile Status -->
+            <div class="user-profile-status">
+                <h3><i class="fas fa-user-circle"></i> 用户档案状态</h3>
+                <div class="profile-info" id="profileInfo" style="display: none;">
+                    <div class="profile-detail">
+                        <span class="profile-label">姓名:</span>
+                        <span class="profile-value" id="profileName">加载中...</span>
+                    </div>
+                    <div class="profile-detail">
+                        <span class="profile-label">邮箱:</span>
+                        <span class="profile-value" id="profileEmail">加载中...</span>
+                    </div>
+                    <div class="profile-detail">
+                        <span class="profile-label">声誉:</span>
+                        <span class="profile-value" id="profileReputation">0</span>
+                    </div>
+                    <div class="profile-detail">
+                        <span class="profile-label">验证状态:</span>
+                        <span class="profile-value status unverified" id="profileVerified">未验证</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-activity-section">
+                <h3><i class="fas fa-history"></i> 最近活动</h3>
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>正在加载活动数据...</span>
+                    </div>
+                </div>
+                <div class="pagination-controls" id="activityPagination" style="display: none;">
+                    <button class="btn btn-sm btn-outline" onclick="changeActivityPage('prev')" disabled id="activityPrevBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="pagination-info" id="activityPageInfo">第 1 页，共 1 页</span>
+                    <button class="btn btn-sm btn-outline" onclick="changeActivityPage('next')" disabled id="activityNextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Network Status -->
+            <div class="network-status-section">
+                <h3><i class="fas fa-globe"></i> 网络状态</h3>
+                <div class="network-info">
+                    <div class="network-item">
+                        <span class="network-label">网络名称</span>
+                        <span class="network-value" id="networkName">-</span>
+                    </div>
+                    <div class="network-item">
+                        <span class="network-label">当前区块</span>
+                        <span class="network-value" id="blockNumber">-</span>
+                    </div>
+                    <div class="network-item">
+                        <span class="network-label">Gas价格</span>
+                        <span class="network-value" id="gasPrice">-</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Research Tab -->
-        <div class="tab-content" id="research">
-            <div class="form-section">
+        <div class="tab-content" id="research" style="display: none;">
+            <div class="section-header">
                 <h2><i class="fas fa-flask"></i> 发布研究</h2>
-                <form id="researchForm" class="form">
-                    <div class="form-group">
-                        <label for="researchTitle">研究标题</label>
-                        <input type="text" id="researchTitle" placeholder="请输入研究标题" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="researchDesc">研究描述</label>
-                        <textarea id="researchDesc" placeholder="请描述您的研究内容" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="datasetName">数据集名称</label>
-                        <input type="text" id="datasetName" placeholder="数据集名称" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="datasetDesc">数据集描述</label>
-                        <textarea id="datasetDesc" placeholder="数据集描述" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="isPublicDataset" checked>
-                            公开数据集
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-upload"></i> 发布研究
-                    </button>
-                </form>
+                <p class="section-description">发布您的科学研究成果，获得区块链永久存证和学术认可</p>
             </div>
 
-            <div class="research-list">
-                <h2><i class="fas fa-list"></i> 研究列表</h2>
-                <div id="researchList" class="research-items">
-                    <div class="loading">
+            <form id="researchForm" class="form">
+                <div class="form-section">
+                    <h3><i class="fas fa-info-circle"></i> 基本信息</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="researchTitle">
+                                <i class="fas fa-heading"></i> 研究标题
+                            </label>
+                            <input type="text" id="researchTitle" placeholder="请输入研究标题" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="researchCategory">
+                                <i class="fas fa-tag"></i> 研究领域
+                            </label>
+                            <select id="researchCategory" required>
+                                <option value="">选择研究领域</option>
+                                <option value="biomedical">生物医学</option>
+                                <option value="ai">人工智能</option>
+                                <option value="climate">气候科学</option>
+                                <option value="quantum">量子计算</option>
+                                <option value="materials">材料科学</option>
+                                <option value="neuroscience">神经科学</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="researchAbstract">
+                            <i class="fas fa-align-left"></i> 研究摘要
+                        </label>
+                        <textarea id="researchAbstract" placeholder="请输入研究摘要（300字以内）" maxlength="500" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="researchKeywords">
+                            <i class="fas fa-hashtag"></i> 关键词
+                        </label>
+                        <input type="text" id="researchKeywords" placeholder="用逗号分隔关键词" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-database"></i> 数据集信息</h3>
+                    <div class="dataset-upload-section">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <p class="upload-text">拖拽文件到此处或点击选择</p>
+                            <p class="upload-hint">支持 PDF, DOC, ZIP 等格式（最大 50MB）</p>
+                            <input type="file" id="datasetFile" style="display: none;">
+                        </div>
+                        <div class="upload-progress" id="uploadProgress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <p id="progressText">上传中...</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="datasetName">
+                                <i class="fas fa-file-alt"></i> 数据集名称
+                            </label>
+                            <input type="text" id="datasetName" placeholder="数据集名称">
+                        </div>
+                        <div class="form-group">
+                            <label for="datasetLicense">
+                                <i class="fas fa-balance-scale"></i> 许可证
+                            </label>
+                            <select id="datasetLicense">
+                                <option value="cc-by">CC BY 4.0</option>
+                                <option value="cc-by-sa">CC BY-SA 4.0</option>
+                                <option value="mit">MIT</option>
+                                <option value="apache">Apache 2.0</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="isPublicDataset" checked>
+                            <span>公开数据集</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-shield-alt"></i> 零知识证明</h3>
+                    <div class="zk-proof-section">
+                        <div class="proof-intro">
+                            <p>零知识证明可以验证研究结果的真实性，而不泄露具体数据</p>
+                        </div>
+                        <div class="proof-types">
+                            <div class="proof-type-card" onclick="generateZKProof('research_authenticity')">
+                                <i class="fas fa-check-circle proof-icon"></i>
+                                <div class="proof-info">
+                                    <h4>研究真实性证明</h4>
+                                    <p>验证研究的真实性和完整性</p>
+                                </div>
+                            </div>
+                            <div class="proof-type-card" onclick="generateZKProof('data_integrity')">
+                                <i class="fas fa-lock proof-icon"></i>
+                                <div class="proof-info">
+                                    <h4>数据完整性证明</h4>
+                                    <p>确保数据未被篡改</p>
+                                </div>
+                            </div>
+                            <div class="proof-type-card" onclick="generateZKProof('peer_review')">
+                                <i class="fas fa-users proof-icon"></i>
+                                <div class="proof-info">
+                                    <h4>同行评审证明</h4>
+                                    <p>验证评审过程的公正性</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="proof-list" id="proofList">
+                            <p class="no-proofs">暂无证明，点击上方卡片生成</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-cog"></i> 发布选项</h3>
+                    <div class="publication-options">
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="enablePeerReview" checked>
+                                <span>启用同行评审</span>
+                            </label>
+                            <small>启用后，其他研究者可以对您的研究进行评审</small>
+                        </div>
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="mintNFT" checked>
+                                <span>铸造研究NFT</span>
+                            </label>
+                            <small>为您的研究铸造唯一的NFT证书</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-paper-plane"></i> 发布研究
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetResearchForm()">
+                        <i class="fas fa-redo"></i> 重置表单
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Profile Tab -->
+        <div class="tab-content" id="profile" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-user"></i> 用户档案</h2>
+                <p class="section-description">创建和管理您的科研人员档案，建立学术声誉</p>
+            </div>
+
+            <form id="profileForm" class="form">
+                <div class="form-section">
+                    <h3><i class="fas fa-user-edit"></i> 基本信息</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">
+                                <i class="fas fa-signature"></i> 姓名
+                            </label>
+                            <input type="text" id="fullName" placeholder="请输入您的姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">
+                                <i class="fas fa-birthday-cake"></i> 年龄
+                            </label>
+                            <input type="number" id="age" placeholder="年龄" min="18" max="120" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">
+                                <i class="fas fa-envelope"></i> 邮箱
+                            </label>
+                            <input type="email" id="email" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="institution">
+                                <i class="fas fa-university"></i> 机构
+                            </label>
+                            <input type="text" id="institution" placeholder="所在机构/大学" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialty">
+                            <i class="fas fa-microscope"></i> 研究领域
+                        </label>
+                        <input type="text" id="specialty" placeholder="您的研究领域" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ipfsHash">
+                            <i class="fas fa-link"></i> IPFS哈希（可选）
+                        </label>
+                        <input type="text" id="ipfsHash" placeholder="Qm...（用于存储详细档案）">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> 保存档案
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="loadProfile()">
+                        <i class="fas fa-download"></i> 加载档案
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Blockchain Tab -->
+        <div class="tab-content" id="blockchain" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-link"></i> 区块链状态</h2>
+                <p class="section-description">实时监控区块链网络状态和智能合约运行情况</p>
+            </div>
+
+            <!-- Network Overview -->
+            <div class="network-overview">
+                <div class="network-status">
+                    <h3><i class="fas fa-globe"></i> 网络状态</h3>
+                    <div class="network-info">
+                        <div class="network-badge" id="networkBadge">
+                            <i class="fas fa-circle"></i>
+                            连接中...
+                        </div>
+                        <div class="network-metrics">
+                            <div class="metric">
+                                <span class="metric-label">当前区块</span>
+                                <span class="metric-value" id="currentBlock">-</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Gas价格</span>
+                                <span class="metric-value" id="gasPrice">-</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">网络延迟</span>
+                                <span class="metric-value" id="networkLatency">-</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">总交易数</span>
+                                <span class="metric-value" id="totalTransactions">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Contracts -->
+            <div class="contracts-section">
+                <h3><i class="fas fa-file-contract"></i> 智能合约</h3>
+                <div class="contract-grid">
+                    <div class="contract-card">
+                        <div class="contract-header">
+                            <h4><i class="fas fa-user"></i> 用户档案合约</h4>
+                            <span class="contract-status status-active">活跃</span>
+                        </div>
+                        <div class="contract-address" id="userProfileAddress">-</div>
+                        <div class="contract-functions">
+                            <button class="btn btn-sm btn-outline" onclick="callReadFunction('getTotalUsers')">
+                                <i class="fas fa-eye"></i> 查看用户数
+                            </button>
+                        </div>
+                    </div>
+                    <div class="contract-card">
+                        <div class="contract-header">
+                            <h4><i class="fas fa-shield-alt"></i> 零知识证明合约</h4>
+                            <span class="contract-status status-active">活跃</span>
+                        </div>
+                        <div class="contract-address" id="zkProofAddress">-</div>
+                        <div class="contract-functions">
+                            <button class="btn btn-sm btn-outline" onclick="callReadFunction('getTotalProofs')">
+                                <i class="fas fa-eye"></i> 查看证明数
+                            </button>
+                        </div>
+                    </div>
+                    <div class="contract-card">
+                        <div class="contract-header">
+                            <h4><i class="fas fa-certificate"></i> NFT合约</h4>
+                            <span class="contract-status status-active">活跃</span>
+                        </div>
+                        <div class="contract-address" id="nftAddress">-</div>
+                        <div class="contract-functions">
+                            <button class="btn btn-sm btn-outline" onclick="callReadFunction('getTotalNFTs')">
+                                <i class="fas fa-eye"></i> 查看NFT数
+                            </button>
+                        </div>
+                    </div>
+                    <div class="contract-card">
+                        <div class="contract-header">
+                            <h4><i class="fas fa-database"></i> 数据集合约</h4>
+                            <span class="contract-status status-active">活跃</span>
+                        </div>
+                        <div class="contract-address" id="datasetAddress">-</div>
+                        <div class="contract-functions">
+                            <button class="btn btn-sm btn-outline" onclick="callReadFunction('getTotalDatasets')">
+                                <i class="fas fa-eye"></i> 查看数据集数
+                            </button>
+                        </div>
+                    </div>
+                    <div class="contract-card">
+                        <div class="contract-header">
+                            <h4><i class="fas fa-flask"></i> 平台合约</h4>
+                            <span class="contract-status status-active">活跃</span>
+                        </div>
+                        <div class="contract-address" id="platformAddress">-</div>
+                        <div class="contract-functions">
+                            <button class="btn btn-sm btn-outline" onclick="callReadFunction('getTotalResearches')">
+                                <i class="fas fa-eye"></i> 查看研究数
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contract Addresses -->
+            <div class="contract-addresses-section">
+                <h3><i class="fas fa-address-book"></i> 合约地址</h3>
+                <div class="contract-addresses" id="contractAddresses">
+                    <div class="address-item">
                         <i class="fas fa-spinner fa-spin"></i>
                         <span>加载中...</span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Review Tab -->
-        <div class="tab-content" id="review">
-            <div class="review-section">
-                <h2><i class="fas fa-clipboard-check"></i> 同行评议</h2>
-                <div id="reviewList" class="review-items">
-                    <div class="loading">
+            <!-- Transaction Monitor -->
+            <div class="transaction-monitor">
+                <div class="monitor-controls">
+                    <h3><i class="fas fa-exchange-alt"></i> 交易监控</h3>
+                    <div class="control-buttons">
+                        <button class="btn btn-outline" onclick="refreshContracts()">
+                            <i class="fas fa-sync-alt"></i> 刷新
+                        </button>
+                        <button class="btn btn-outline" onclick="clearTransactionLog()">
+                            <i class="fas fa-trash"></i> 清空日志
+                        </button>
+                    </div>
+                </div>
+                <div class="transaction-list" id="transactionList">
+                    <div class="transaction-item">
                         <i class="fas fa-spinner fa-spin"></i>
-                        <span>加载待评议研究...</span>
+                        <span>等待交易...</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- NFT Tab -->
-        <div class="tab-content" id="nft">
-            <div class="nft-section">
-                <h2><i class="fas fa-certificate"></i> 我的研究NFT</h2>
-                <div id="nftList" class="nft-grid">
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <span>加载NFT收藏...</span>
+        <!-- Analytics Tab -->
+        <div class="tab-content" id="analytics" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> 数据概览</h2>
+                <p class="section-description">平台数据的可视化分析和统计信息</p>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="analytics-dashboard">
+                <div class="analytics-grid">
+                    <div class="chart-container">
+                        <h3><i class="fas fa-chart-line"></i> 用户增长趋势</h3>
+                        <canvas id="userGrowthChart"></canvas>
                     </div>
+                    <div class="chart-container">
+                        <h3><i class="fas fa-chart-pie"></i> 研究领域分布</h3>
+                        <canvas id="researchTypeChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3><i class="fas fa-chart-bar"></i> Gas消耗统计</h3>
+                        <canvas id="gasUsageChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3><i class="fas fa-chart-radar"></i> 声誉分布</h3>
+                        <canvas id="reputationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="performance-metrics">
+                <h3><i class="fas fa-tachometer-alt"></i> 性能指标</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4>响应时间</h4>
+                        <div class="metric-value">< 200ms</div>
+                        <div class="metric-unit">平均响应时间</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>交易成功率</h4>
+                        <div class="metric-value">99.8%</div>
+                        <div class="metric-unit">过去24小时</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>网络延迟</h4>
+                        <div class="metric-value">< 50ms</div>
+                        <div class="metric-unit">平均延迟</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>活跃用户</h4>
+                        <div class="metric-value" id="activeUsers">1,247</div>
+                        <div class="metric-unit">当前在线</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Controls -->
+            <div class="simulation-controls">
+                <div class="demo-status" id="demoStatus" style="display: none;">
+                    <h3><i class="fas fa-play-circle"></i> 演示进行中</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="demoProgress"></div>
+                    </div>
+                    <div class="demo-stats">
+                        <span>用户: <strong id="demoUserCount">0</strong></span>
+                        <span>研究: <strong id="demoResearchCount">0</strong></span>
+                        <span>评审: <strong id="demoReviewCount">0</strong></span>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button id="startDemoBtn" class="btn btn-primary" onclick="startDemo()">
+                        <i class="fas fa-play"></i> 开始演示
+                    </button>
+                    <button id="stopDemoBtn" class="btn btn-danger" style="display: none;" onclick="stopDemo()">
+                        <i class="fas fa-stop"></i> 停止演示
+                    </button>
+                    <button id="generateUsersBtn" class="btn btn-secondary" onclick="generateUsers()">
+                        <i class="fas fa-users"></i> 生成用户
+                    </button>
+                    <button id="generateResearchBtn" class="btn btn-secondary" onclick="generateResearch()">
+                        <i class="fas fa-flask"></i> 生成研究
+                    </button>
+                    <button id="simulateReviewsBtn" class="btn btn-secondary" onclick="simulateReviews()">
+                        <i class="fas fa-clipboard-check"></i> 模拟评审
+                    </button>
+                    <button id="clearDataBtn" class="btn btn-danger" onclick="clearData()">
+                        <i class="fas fa-trash"></i> 清空数据
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Loading Overlay -->
-        <div class="loading-overlay" id="loadingOverlay">
-            <div class="loading-spinner">
-                <i class="fas fa-circle-notch fa-spin"></i>
-                <p>处理中...</p>
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-content">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p id="loadingText">加载中...</p>
             </div>
         </div>
 
-        <!-- Toast Notifications -->
-        <div class="toast-container" id="toastContainer"></div>
-    </div>
+        <!-- Toast Container -->
+        <div id="toastContainer" class="toast-container"></div>
 
-    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
-    <script src="app.js"></script>
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+        <script src="ui-enhancements.js"></script>
+        <script src="app.js"></script>
+    </div>
 </body>
 </html>

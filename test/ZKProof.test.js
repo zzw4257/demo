@@ -19,17 +19,19 @@ describe("ZKProof Contract", function () {
     });
 
     it("Should initialize with zero proofs", async function () {
-      expect(await zkProof.totalProofs()).to.equal(0);
+      expect(await zkProof.getTotalProofs()).to.equal(0);
     });
   });
 
   describe("Verifier Management", function () {
-    it("Should allow owner to add verifiers", async function () {
-      await expect(zkProof.addVerifier(verifier1.address))
-        .to.emit(zkProof, "VerifierAdded")
-        .withArgs(verifier1.address);
+    it("Should allow owner to add proof types", async function () {
+      const proofType = "custom_proof";
+      await expect(zkProof.addProofType(proofType, owner.address, 50))
+        .to.emit(zkProof, "ProofTypeAdded")
+        .withArgs(proofType, owner.address);
 
-      expect(await zkProof.isVerifier(verifier1.address)).to.be.true;
+      const pt = await zkProof.getProofType(proofType);
+      expect(pt.name).to.equal(proofType);
     });
 
     it("Should prevent non-owner from adding verifiers", async function () {

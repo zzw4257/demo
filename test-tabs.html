@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签页切换测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .tab-btn:hover {
+            background: #f8f9fa;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .debug-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .test-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 标签页切换测试</h1>
+        <p>这个页面专门用于测试标签页切换功能。打开浏览器开发者工具的Console标签页查看调试信息。</p>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt"></i> 仪表板
+            </button>
+            <button class="tab-btn" data-tab="profile">
+                <i class="fas fa-user"></i> 用户档案
+            </button>
+            <button class="tab-btn" data-tab="research">
+                <i class="fas fa-flask"></i> 研究发布
+            </button>
+            <button class="tab-btn" data-tab="review">
+                <i class="fas fa-clipboard-check"></i> 同行评议
+            </button>
+        </nav>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <h2>📊 仪表板</h2>
+            <p>这是仪表板内容。显示平台统计数据和实时状态。</p>
+            <div class="stats">
+                <div>总用户: <strong>42</strong></div>
+                <div>活跃研究: <strong>15</strong></div>
+                <div>NFT数量: <strong>8</strong></div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div class="tab-content" id="profile">
+            <h2>👤 用户档案</h2>
+            <p>这是用户档案页面。用于创建和管理研究者档案。</p>
+            <form id="profileForm">
+                <div style="margin-bottom: 10px;">
+                    <label>姓名:</label>
+                    <input type="text" id="fullName" placeholder="输入姓名">
+                </div>
+                <button type="submit" class="test-btn">创建档案</button>
+            </form>
+        </div>
+
+        <!-- Research Tab -->
+        <div class="tab-content" id="research">
+            <h2>🔬 研究发布</h2>
+            <p>这是研究发布页面。用于发布新的研究项目。</p>
+            <form id="researchForm">
+                <div style="margin-bottom: 10px;">
+                    <label>研究标题:</label>
+                    <input type="text" id="researchTitle" placeholder="输入研究标题">
+                </div>
+                <button type="submit" class="test-btn">发布研究</button>
+            </form>
+        </div>
+
+        <!-- Review Tab -->
+        <div class="tab-content" id="review">
+            <h2>📝 同行评议</h2>
+            <p>这是同行评议页面。用于参与同行评审流程。</p>
+            <div class="review-list">
+                <p>暂无待评审项目</p>
+            </div>
+        </div>
+
+        <div class="debug-info">
+            <h3>🐛 调试信息</h3>
+            <p>请打开浏览器开发者工具的Console标签页查看调试信息。</p>
+            <p>当你点击标签页按钮时，应该能看到类似以下的输出：</p>
+            <ul>
+                <li><code>设置事件监听器...</code></li>
+                <li><code>绑定标签页按钮: dashboard</code></li>
+                <li><code>标签页按钮被点击: profile</code></li>
+                <li><code>切换到标签页: profile</code></li>
+                <li><code>显示标签页内容: profile</code></li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3>🔧 测试功能</h3>
+            <button onclick="testSwitchTab('profile')" class="test-btn">测试切换到用户档案</button>
+            <button onclick="testSwitchTab('research')" class="test-btn">测试切换到研究发布</button>
+            <button onclick="testSwitchTab('review')" class="test-btn">测试切换到同行评议</button>
+            <button onclick="testSwitchTab('dashboard')" class="test-btn">测试切换到仪表板</button>
+        </div>
+    </div>
+
+    <script>
+        // Setup event listeners
+        function setupEventListeners() {
+            console.log('设置事件监听器...');
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                console.log('绑定标签页按钮:', btn.dataset.tab);
+                btn.addEventListener('click', (e) => {
+                    console.log('标签页按钮被点击:', btn.dataset.tab);
+                    switchTab(btn.dataset.tab);
+                });
+            });
+
+            // 绑定表单事件
+            const profileForm = document.getElementById('profileForm');
+            if (profileForm) {
+                profileForm.addEventListener('submit', handleCreateProfile);
+            }
+
+            const researchForm = document.getElementById('researchForm');
+            if (researchForm) {
+                researchForm.addEventListener('submit', handlePublishResearch);
+            }
+
+            console.log('事件监听器设置完成');
+        }
+
+        // Switch tabs
+        function switchTab(tabName) {
+            console.log('切换到标签页:', tabName);
+
+            // 移除所有标签页按钮的active类
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 为当前标签页按钮添加active类
+            const currentBtn = document.querySelector(`[data-tab="${tabName}"]`);
+            if (currentBtn) {
+                currentBtn.classList.add('active');
+                console.log('激活标签页按钮:', tabName);
+            } else {
+                console.error('找不到标签页按钮:', tabName);
+            }
+
+            // 移除所有内容区域的active类
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none'; // 确保隐藏
+            });
+
+            // 为当前内容区域添加active类
+            const currentContent = document.getElementById(tabName);
+            if (currentContent) {
+                currentContent.classList.add('active');
+                currentContent.style.display = 'block'; // 确保显示
+                console.log('显示标签页内容:', tabName);
+            } else {
+                console.error('找不到标签页内容:', tabName);
+            }
+        }
+
+        // Handle create profile
+        function handleCreateProfile(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            console.log('创建用户档案:', fullName);
+            alert('用户档案创建成功: ' + fullName);
+        }
+
+        // Handle publish research
+        function handlePublishResearch(e) {
+            e.preventDefault();
+            const researchTitle = document.getElementById('researchTitle').value;
+            console.log('发布研究:', researchTitle);
+            alert('研究发布成功: ' + researchTitle);
+        }
+
+        // 测试函数
+        function testSwitchTab(tabName) {
+            console.log('手动测试切换到:', tabName);
+            switchTab(tabName);
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            console.log('页面加载完成，开始初始化...');
+            setupEventListeners();
+            console.log('初始化完成！');
+        });
+    </script>
+</body>
+</html>

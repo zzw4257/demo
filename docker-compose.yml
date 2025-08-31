@@ -1,0 +1,145 @@
+version: '3.8'
+
+services:
+  # DeSci Platform 主应用
+  desci-platform:
+    build: .
+    container_name: desci-platform-prod
+    ports:
+      - "3000:3000"   # 前端和API
+      - "8545:8545"   # Hardhat网络
+    environment:
+      - NODE_ENV=production
+      - DEBUG=false
+      - BLOCKCHAIN_ENABLED=true
+      - PORT=3000
+      - API_PORT=3000
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - desci-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: desci-postgres
+    environment:
+      POSTGRES_DB: desci_prod
+      POSTGRES_USER: desci
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-desci_password_2024}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - desci-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U desci -d desci_prod"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: desci-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - desci-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx 反向代理 (可选)
+  nginx:
+    image: nginx:alpine
+    container_name: desci-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/ssl/certs:ro
+    depends_on:
+      - desci-platform
+    restart: unless-stopped
+    networks:
+      - desci-network
+    profiles:
+      - with-nginx
+
+  # 监控服务 (可选)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: desci-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - desci-network
+    profiles:
+      - with-monitoring
+
+  # Grafana 可视化 (可选)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: desci-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - desci-network
+    profiles:
+      - with-monitoring
+
+networks:
+  desci-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+# 使用方法:
+# 基本启动: docker-compose up -d
+# 带监控启动: docker-compose --profile with-monitoring up -d
+# 带nginx启动: docker-compose --profile with-nginx up -d
+# 全功能启动: docker-compose --profile with-monitoring --profile with-nginx up -d

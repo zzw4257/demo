@@ -19,7 +19,7 @@ describe("Dataset Contract", function () {
     });
 
     it("Should initialize with zero datasets", async function () {
-      expect(await dataset.totalDatasets()).to.equal(0);
+      expect(await dataset.getTotalDatasets()).to.equal(0);
     });
   });
 
@@ -30,58 +30,67 @@ describe("Dataset Contract", function () {
     const dataHash = "0x1234567890abcdef1234567890abcdef12345678";
 
     it("Should register public dataset successfully", async function () {
+      const tags = ["climate", "research"];
       await expect(
-        dataset.connect(user1).registerDataset(name, description, ipfsHash, dataHash, true, 0)
+        dataset.connect(user1).registerDataset(name, description, ipfsHash, dataHash, true, 0, tags)
       ).to.emit(dataset, "DatasetRegistered")
-        .withArgs(1, user1.address, name);
+        .withArgs(1, user1.address, name, ipfsHash);
 
       const ds = await dataset.getDataset(1);
       expect(ds.name).to.equal(name);
       expect(ds.description).to.equal(description);
       expect(ds.owner).to.equal(user1.address);
-      expect(ds.ipfsHash).to.equal(ipfsHash);
-      expect(ds.dataHash).to.equal(dataHash);
+      expect(ds.dataHash).to.equal(ipfsHash);
+      expect(ds.metadataHash).to.equal(dataHash);
       expect(ds.isPublic).to.be.true;
       expect(ds.accessPrice).to.equal(0);
       expect(ds.isVerified).to.be.false;
       expect(ds.version).to.equal(1);
+      expect(ds.tags).to.deep.equal(tags);
     });
 
     it("Should register private dataset successfully", async function () {
       const accessPrice = ethers.parseEther("0.1");
-      
+      const tags = ["private", "research"];
+
       await expect(
-        await dataset.connect(user1).registerDataset(name, description, ipfsHash, dataHash, false, accessPrice)
+        dataset.connect(user1).registerDataset(name, description, ipfsHash, dataHash, false, accessPrice, tags)
       ).to.emit(dataset, "DatasetRegistered")
-        .withArgs(1, user1.address, name);
+        .withArgs(1, user1.address, name, ipfsHash);
 
       const ds = await dataset.getDataset(1);
+      expect(ds.dataHash).to.equal(ipfsHash);
+      expect(ds.metadataHash).to.equal(dataHash);
       expect(ds.isPublic).to.be.false;
       expect(ds.accessPrice).to.equal(accessPrice);
+      expect(ds.tags).to.deep.equal(tags);
     });
 
     it("Should increment dataset counter", async function () {
-      await dataset.connect(user1).registerDataset(name, description, ipfsHash, dataHash, true, 0);
-      expect(await dataset.totalDatasets()).to.equal(1);
+      const tags = ["test"];
+      await dataset.connect(user1).registerDataset(name, description, ipfsHash, dataHash, true, 0, tags);
+      expect(await dataset.getTotalDatasets()).to.equal(1);
 
-      await dataset.connect(user2).registerDataset(name + "2", description, ipfsHash, dataHash, true, 0);
-      expect(await dataset.totalDatasets()).to.equal(2);
+      await dataset.connect(user2).registerDataset(name + "2", description, ipfsHash, dataHash, true, 0, tags);
+      expect(await dataset.getTotalDatasets()).to.equal(2);
     });
 
     it("Should handle empty strings", async function () {
-      await dataset.connect(user1).registerDataset("", "", "", dataHash, true, 0);
-      
+      const emptyTags = ["test"];
+      await dataset.connect(user1).registerDataset("", "", "", dataHash, true, 0, emptyTags);
+
       const ds = await dataset.getDataset(1);
       expect(ds.name).to.equal("");
       expect(ds.description).to.equal("");
-      expect(ds.ipfsHash).to.equal("");
+      expect(ds.dataHash).to.equal("");
     });
   });
 
   describe("Dataset Verification", function () {
     beforeEach(async function () {
+      const tags = ["test"];
       await dataset.connect(user1).registerDataset(
-        "Test Dataset", "Description", "QmHash", "0x1234", true, 0
+        "Test Dataset", "Description", "QmHash", "0x1234", true, 0, tags
       );
     });
 
@@ -113,8 +122,9 @@ describe("Dataset Contract", function () {
 
   describe("Dataset Updates", function () {
     beforeEach(async function () {
+      const tags = ["original"];
       await dataset.connect(user1).registerDataset(
-        "Original Dataset", "Original Description", "QmOriginalHash", "0x1234", true, 0
+        "Original Dataset", "Original Description", "QmOriginalHash", "0x1234", true, 0, tags
       );
     });
 
@@ -162,15 +172,17 @@ describe("Dataset Contract", function () {
 
     beforeEach(async function () {
       // Register a private dataset with access price
+      const tags = ["private"];
       await dataset.connect(user1).registerDataset(
-        "Private Dataset", "Private Description", "QmPrivateHash", "0x1234", false, accessPrice
+        "Private Dataset", "Private Description", "QmPrivateHash", "0x1234", false, accessPrice, tags
       );
     });
 
     it("Should grant access to public datasets for free", async function () {
       // Register a public dataset
+      const publicTags = ["public"];
       await dataset.connect(user1).registerDataset(
-        "Public Dataset", "Public Description", "QmPublicHash", "0x5678", true, 0
+        "Public Dataset", "Public Description", "QmPublicHash", "0x5678", true, 0, publicTags
       );
 
       await expect(dataset.connect(user2).requestAccess(2))
@@ -227,20 +239,21 @@ describe("Dataset Contract", function () {
 
   describe("Dataset Queries", function () {
     beforeEach(async function () {
-      await dataset.connect(user1).registerDataset("Dataset 1", "Desc 1", "Hash1", "0x1111", true, 0);
-      await dataset.connect(user1).registerDataset("Dataset 2", "Desc 2", "Hash2", "0x2222", false, ethers.parseEther("0.1"));
-      await dataset.connect(user2).registerDataset("Dataset 3", "Desc 3", "Hash3", "0x3333", true, 0);
-      
+      const tags = ["test"];
+      await dataset.connect(user1).registerDataset("Dataset 1", "Desc 1", "Hash1", "0x1111", true, 0, tags);
+      await dataset.connect(user1).registerDataset("Dataset 2", "Desc 2", "Hash2", "0x2222", false, ethers.parseEther("0.1"), tags);
+      await dataset.connect(user2).registerDataset("Dataset 3", "Desc 3", "Hash3", "0x3333", true, 0, tags);
+
       await dataset.verifyDataset(1);
     });
 
     it("Should get user datasets correctly", async function () {
-      const user1Datasets = await dataset.getUserDatasets(user1.address);
+      const user1Datasets = await dataset.getOwnerDatasets(user1.address);
       expect(user1Datasets.length).to.equal(2);
       expect(user1Datasets[0]).to.equal(1);
       expect(user1Datasets[1]).to.equal(2);
 
-      const user2Datasets = await dataset.getUserDatasets(user2.address);
+      const user2Datasets = await dataset.getOwnerDatasets(user2.address);
       expect(user2Datasets.length).to.equal(1);
       expect(user2Datasets[0]).to.equal(3);
     });
@@ -273,8 +286,9 @@ describe("Dataset Contract", function () {
     it("Should handle maximum access price", async function () {
       const maxPrice = ethers.MaxUint256;
       
+      const expensiveTags = ["expensive"];
       await dataset.connect(user1).registerDataset(
-        "Expensive Dataset", "Very expensive", "QmExpensive", "0x1234", false, maxPrice
+        "Expensive Dataset", "Very expensive", "QmExpensive", "0x1234", false, maxPrice, expensiveTags
       );
 
       const ds = await dataset.getDataset(1);
@@ -286,8 +300,9 @@ describe("Dataset Contract", function () {
       const longDescription = "B".repeat(2000);
       const longIpfsHash = "Qm" + "C".repeat(100);
 
+      const longTags = ["long"];
       await dataset.connect(user1).registerDataset(
-        longName, longDescription, longIpfsHash, "0x1234", true, 0
+        longName, longDescription, longIpfsHash, "0x1234", true, 0, longTags
       );
 
       const ds = await dataset.getDataset(1);
@@ -297,8 +312,9 @@ describe("Dataset Contract", function () {
     });
 
     it("Should handle multiple access requests from same user", async function () {
+      const publicTags = ["public"];
       await dataset.connect(user1).registerDataset(
-        "Public Dataset", "Public", "QmPublic", "0x1234", true, 0
+        "Public Dataset", "Public", "QmPublic", "0x1234", true, 0, publicTags
       );
 
       await dataset.connect(user2).requestAccess(1);
@@ -310,8 +326,9 @@ describe("Dataset Contract", function () {
     });
 
     it("Should handle zero access price for private datasets", async function () {
+      const freeTags = ["free", "private"];
       await dataset.connect(user1).registerDataset(
-        "Free Private Dataset", "Free but private", "QmFree", "0x1234", false, 0
+        "Free Private Dataset", "Free but private", "QmFree", "0x1234", false, 0, freeTags
       );
 
       await dataset.connect(user2).requestAccess(1);
@@ -324,8 +341,9 @@ describe("Dataset Contract", function () {
       const gasUsages = [];
       
       for (let i = 0; i < 5; i++) {
+        const tags = [`tag${i}`];
         const tx = await dataset.connect(user1).registerDataset(
-          `Dataset ${i}`, `Description ${i}`, `Hash${i}`, `0x${i}234`, true, 0
+          `Dataset ${i}`, `Description ${i}`, `Hash${i}`, `0x${i}234`, true, 0, tags
         );
         const receipt = await tx.wait();
         gasUsages.push(receipt.gasUsed.toNumber());
@@ -340,8 +358,9 @@ describe("Dataset Contract", function () {
     it("Should efficiently handle batch access requests", async function () {
       // Register multiple public datasets
       for (let i = 0; i < 3; i++) {
+        const tags = [`public${i}`];
         await dataset.connect(user1).registerDataset(
-          `Public Dataset ${i}`, `Description ${i}`, `Hash${i}`, `0x${i}234`, true, 0
+          `Public Dataset ${i}`, `Description ${i}`, `Hash${i}`, `0x${i}234`, true, 0, tags
         );
       }
 
@@ -360,10 +379,11 @@ describe("Dataset Contract", function () {
 
   describe("Security Tests", function () {
     it("Should prevent reentrancy attacks on paid access", async function () {
-      const accessPrice = ethers.utils.parseEther("0.1");
-      
+      const accessPrice = ethers.parseEther("0.1");
+      const tags = ["private"];
+
       await dataset.connect(user1).registerDataset(
-        "Private Dataset", "Private", "QmPrivate", "0x1234", false, accessPrice
+        "Private Dataset", "Private", "QmPrivate", "0x1234", false, accessPrice, tags
       );
 
       // Normal access should work
@@ -374,8 +394,9 @@ describe("Dataset Contract", function () {
     it("Should handle contract balance correctly", async function () {
       const accessPrice = ethers.parseEther("0.1");
       
+      const tags = ["private"];
       await dataset.connect(user1).registerDataset(
-        "Private Dataset", "Private", "QmPrivate", "0x1234", false, accessPrice
+        "Private Dataset", "Private", "QmPrivate", "0x1234", false, accessPrice, tags
       );
 
       const initialContractBalance = await ethers.provider.getBalance(dataset.address);

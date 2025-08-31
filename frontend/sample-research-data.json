@@ -1,0 +1,81 @@
+{
+  "type": "research",
+  "version": "1.0",
+  "description": "量子计算研究项目数据",
+  "timestamp": "2024-08-30T10:00:00Z",
+  "research": [
+    {
+      "id": "quantum-entanglement-001",
+      "title": "量子纠缠在量子计算中的应用研究",
+      "authors": ["Dr. Alice Chen", "Dr. David Liu"],
+      "abstract": "本研究探讨量子纠缠现象在量子计算中的实际应用，通过实验验证和理论分析，证明了量子纠缠可以显著提高量子算法的效率。",
+      "category": "量子计算",
+      "tags": ["量子纠缠", "量子算法", "量子计算"],
+      "status": "Published",
+      "funding": 50000,
+      "citations": 23,
+      "publishedDate": "2024-08-15",
+      "doi": "10.1234/quantum.2024.001",
+      "keywords": ["量子计算", "量子算法", "量子信息"],
+      "metadata": {
+        "dataSize": "2.3 GB",
+        "format": "HDF5",
+        "license": "CC-BY-4.0"
+      }
+    },
+    {
+      "id": "machine-learning-002",
+      "title": "基于深度学习的医疗影像辅助诊断系统",
+      "authors": ["Prof. Bob Wilson", "Dr. Lisa Chen"],
+      "abstract": "开发基于深度卷积神经网络的医疗影像诊断系统，在胸部X光片分析中达到95%的准确率。",
+      "category": "人工智能",
+      "tags": ["深度学习", "医疗影像", "辅助诊断"],
+      "status": "UnderReview",
+      "funding": 300000,
+      "citations": 45,
+      "submittedDate": "2024-08-20",
+      "keywords": ["深度学习", "医疗AI", "计算机视觉"],
+      "metadata": {
+        "dataSize": "15.7 GB",
+        "format": "DICOM",
+        "license": "Research Use Only"
+      }
+    }
+  ],
+  "users": [
+    {
+      "id": "alice-chen",
+      "name": "Dr. Alice Chen",
+      "email": "alice.chen@tsinghua.edu.cn",
+      "institution": "清华大学",
+      "specialty": "量子计算",
+      "reputation": 95,
+      "publications": 42,
+      "citations": 1250,
+      "orcid": "0000-0000-0000-0000"
+    },
+    {
+      "id": "bob-wilson",
+      "name": "Prof. Bob Wilson",
+      "email": "bob.wilson@stanford.edu",
+      "institution": "斯坦福大学",
+      "specialty": "机器学习",
+      "reputation": 88,
+      "publications": 67,
+      "citations": 2100,
+      "orcid": "0000-0000-0000-0001"
+    }
+  ],
+  "funding": [
+    {
+      "campaignId": "quantum-funding-001",
+      "title": "量子计算基础设施建设",
+      "goal": 100000,
+      "raised": 75000,
+      "deadline": "2024-12-31",
+      "backers": 25,
+      "category": "基础设施",
+      "description": "为量子计算实验室建设提供资金支持"
+    }
+  ]
+}

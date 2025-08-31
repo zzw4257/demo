@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethers.js 测试页面</title>
+</head>
+<body>
+    <h1>Ethers.js 加载测试</h1>
+    <div id="result"></div>
+    <button onclick="testEthers()">测试 Ethers.js</button>
+
+    <!-- Ethers.js Library with Fallback -->
+    <script>
+        // 检测是否已有ethers.js
+        if (typeof window.ethers !== 'undefined') {
+            console.log('Ethers.js already loaded');
+        } else {
+            // 尝试CDN加载
+            console.log('Loading ethers.js from CDN...');
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.8.0/ethers.umd.min.js"><\/script>');
+        }
+    </script>
+
+    <script>
+        // 检查并提供本地备用方案
+        setTimeout(function() {
+            if (typeof window.ethers === 'undefined') {
+                console.warn('CDN ethers.js failed, using local fallback...');
+                var script = document.createElement('script');
+                script.src = 'frontend/ethers-local.umd.min.js';
+                document.head.appendChild(script);
+            } else {
+                console.log('Ethers.js loaded successfully');
+            }
+        }, 1000);
+
+        function testEthers() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<h3>测试结果:</h3>';
+
+            if (typeof window.ethers === 'undefined') {
+                resultDiv.innerHTML += '<p style="color: red;">❌ Ethers.js 未加载</p>';
+                return;
+            }
+
+            resultDiv.innerHTML += '<p style="color: green;">✅ Ethers.js 已加载</p>';
+            resultDiv.innerHTML += '<p>版本: ' + (window.ethers.version || 'unknown') + '</p>';
+            resultDiv.innerHTML += '<p>BrowserProvider: ' + (typeof window.ethers.BrowserProvider) + '</p>';
+            resultDiv.innerHTML += '<p>Contract: ' + (typeof window.ethers.Contract) + '</p>';
+            resultDiv.innerHTML += '<p>formatUnits: ' + (typeof window.ethers.formatUnits) + '</p>';
+
+            console.log('Ethers.js test result:', window.ethers);
+        }
+
+        // 自动测试
+        setTimeout(function() {
+            if (typeof window.ethers !== 'undefined') {
+                testEthers();
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

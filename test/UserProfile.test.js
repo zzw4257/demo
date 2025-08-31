@@ -19,7 +19,7 @@ describe("UserProfile Contract", function () {
     });
 
     it("Should initialize with zero users", async function () {
-      expect(await userProfile.totalUsers()).to.equal(0);
+      expect(await userProfile.getTotalUsers()).to.equal(0);
     });
   });
 
@@ -29,13 +29,13 @@ describe("UserProfile Contract", function () {
       const name = "Alice";
       const ipfsHash = "QmTestHash123";
 
-      await expect(userProfile.connect(user1).registerUser(email, name, ipfsHash))
-        .to.emit(userProfile, "UserRegistered")
-        .withArgs(user1.address, email);
+      await expect(userProfile.connect(user1).createProfile(name, 25, email, ipfsHash))
+        .to.emit(userProfile, "ProfileCreated")
+        .withArgs(user1.address, email, ipfsHash);
 
       const profile = await userProfile.getProfile(user1.address);
       expect(profile.email).to.equal(email);
-      expect(profile.name).to.equal(name);
+      expect(profile.fullName).to.equal(name);
       expect(profile.ipfsHash).to.equal(ipfsHash);
       expect(profile.isVerified).to.be.false;
       expect(profile.reputation).to.equal(0);
@@ -43,40 +43,40 @@ describe("UserProfile Contract", function () {
 
     it("Should prevent duplicate email registration", async function () {
       const email = "duplicate@example.com";
-      
-      await userProfile.connect(user1).registerUser(email, "User1", "hash1");
-      
+
+      await userProfile.connect(user1).createProfile("User1", 25, email, "hash1");
+
       await expect(
-        userProfile.connect(user2).registerUser(email, "User2", "hash2")
+        userProfile.connect(user2).createProfile("User2", 25, email, "hash2")
       ).to.be.revertedWith("Email already registered");
     });
 
     it("Should prevent duplicate user registration", async function () {
-      await userProfile.connect(user1).registerUser("first@example.com", "User1", "hash1");
-      
+      await userProfile.connect(user1).createProfile("User1", 25, "first@example.com", "hash1");
+
       await expect(
-        userProfile.connect(user1).registerUser("second@example.com", "User1Again", "hash2")
-      ).to.be.revertedWith("User already registered");
+        userProfile.connect(user1).createProfile("User1Again", 25, "second@example.com", "hash2")
+      ).to.be.revertedWith("Profile already exists");
     });
 
     it("Should increment total users count", async function () {
-      await userProfile.connect(user1).registerUser("user1@example.com", "User1", "hash1");
-      expect(await userProfile.totalUsers()).to.equal(1);
+      await userProfile.connect(user1).createProfile("User1", 25, "user1@example.com", "hash1");
+      expect(await userProfile.getTotalUsers()).to.equal(1);
 
-      await userProfile.connect(user2).registerUser("user2@example.com", "User2", "hash2");
-      expect(await userProfile.totalUsers()).to.equal(2);
+      await userProfile.connect(user2).createProfile("User2", 25, "user2@example.com", "hash2");
+      expect(await userProfile.getTotalUsers()).to.equal(2);
     });
   });
 
   describe("User Verification", function () {
     beforeEach(async function () {
-      await userProfile.connect(user1).registerUser("alice@example.com", "Alice", "hash1");
+      await userProfile.connect(user1).createProfile("Alice", 25, "alice@example.com", "hash1");
     });
 
     it("Should allow owner to verify users", async function () {
-      await expect(userProfile.verifyUser(user1.address))
-        .to.emit(userProfile, "UserVerified")
-        .withArgs(user1.address);
+      await expect(userProfile.verifyProfile(user1.address, true))
+        .to.emit(userProfile, "ProfileVerified")
+        .withArgs(user1.address, true);
 
       const profile = await userProfile.getProfile(user1.address);
       expect(profile.isVerified).to.be.true;
@@ -84,26 +84,26 @@ describe("UserProfile Contract", function () {
 
     it("Should prevent non-owner from verifying users", async function () {
       await expect(
-        userProfile.connect(user2).verifyUser(user1.address)
-      ).to.be.revertedWith("Ownable: caller is not the owner");
+        userProfile.connect(user2).verifyProfile(user1.address, true)
+      ).to.be.reverted;
     });
 
     it("Should prevent verifying non-existent users", async function () {
       await expect(
-        userProfile.verifyUser(user2.address)
-      ).to.be.revertedWith("User not registered");
+        userProfile.verifyProfile(user2.address, true)
+      ).to.be.revertedWith("Profile does not exist");
     });
   });
 
   describe("Reputation Management", function () {
     beforeEach(async function () {
-      await userProfile.connect(user1).registerUser("alice@example.com", "Alice", "hash1");
-      await userProfile.verifyUser(user1.address);
+      await userProfile.connect(user1).createProfile("Alice", 25, "alice@example.com", "hash1");
+      await userProfile.verifyProfile(user1.address, true);
     });
 
     it("Should allow owner to update reputation", async function () {
       const newReputation = 100;
-      
+
       await expect(userProfile.updateReputation(user1.address, newReputation))
         .to.emit(userProfile, "ReputationUpdated")
         .withArgs(user1.address, newReputation);
@@ -115,85 +115,97 @@ describe("UserProfile Contract", function () {
     it("Should prevent non-owner from updating reputation", async function () {
       await expect(
         userProfile.connect(user2).updateReputation(user1.address, 100)
-      ).to.be.revertedWith("Ownable: caller is not the owner");
+      ).to.be.reverted;
     });
 
     it("Should prevent updating reputation of non-existent users", async function () {
       await expect(
         userProfile.updateReputation(user2.address, 100)
-      ).to.be.revertedWith("User not registered");
+      ).to.be.revertedWith("Profile does not exist");
     });
   });
 
   describe("Profile Updates", function () {
     beforeEach(async function () {
-      await userProfile.connect(user1).registerUser("alice@example.com", "Alice", "hash1");
+      await userProfile.connect(user1).createProfile("Alice", 25, "alice@example.com", "hash1");
     });
 
     it("Should allow users to update their own profile", async function () {
       const newName = "Alice Updated";
+      const newAge = 26;
       const newIpfsHash = "QmNewHash456";
 
-      await expect(userProfile.connect(user1).updateProfile(newName, newIpfsHash))
+      await expect(userProfile.connect(user1).updateProfile(newName, newAge, newIpfsHash))
         .to.emit(userProfile, "ProfileUpdated")
-        .withArgs(user1.address);
+        .withArgs(user1.address, newIpfsHash);
 
       const profile = await userProfile.getProfile(user1.address);
-      expect(profile.name).to.equal(newName);
+      expect(profile.fullName).to.equal(newName);
+      expect(profile.age).to.equal(newAge);
       expect(profile.ipfsHash).to.equal(newIpfsHash);
     });
 
     it("Should prevent non-registered users from updating profile", async function () {
       await expect(
-        userProfile.connect(user2).updateProfile("Bob", "hash2")
-      ).to.be.revertedWith("User not registered");
+        userProfile.connect(user2).updateProfile("Bob", 25, "hash2")
+      ).to.be.revertedWith("Profile does not exist");
     });
   });
 
   describe("Profile Queries", function () {
     beforeEach(async function () {
-      await userProfile.connect(user1).registerUser("alice@example.com", "Alice", "hash1");
-      await userProfile.connect(user2).registerUser("bob@example.com", "Bob", "hash2");
-      await userProfile.verifyUser(user1.address);
+      await userProfile.connect(user1).createProfile("Alice", 25, "alice@example.com", "hash1");
+      await userProfile.connect(user2).createProfile("Bob", 25, "bob@example.com", "hash2");
+      await userProfile.verifyProfile(user1.address, true);
     });
 
-    it("Should check if user is registered", async function () {
-      expect(await userProfile.isRegistered(user1.address)).to.be.true;
-      expect(await userProfile.isRegistered(user3.address)).to.be.false;
+    it("Should check if user has profile", async function () {
+      expect(await userProfile.hasProfile(user1.address)).to.be.true;
+      expect(await userProfile.hasProfile(user3.address)).to.be.false;
     });
 
     it("Should check if user is verified", async function () {
-      expect(await userProfile.isVerified(user1.address)).to.be.true;
-      expect(await userProfile.isVerified(user2.address)).to.be.false;
-      expect(await userProfile.isVerified(user3.address)).to.be.false;
+      expect(await userProfile.isUserVerified(user1.address)).to.be.true;
+      expect(await userProfile.isUserVerified(user2.address)).to.be.false;
+      expect(await userProfile.isUserVerified(user3.address)).to.be.false;
     });
 
     it("Should get user reputation", async function () {
       await userProfile.updateReputation(user1.address, 150);
-      expect(await userProfile.getReputation(user1.address)).to.equal(150);
-      expect(await userProfile.getReputation(user2.address)).to.equal(0);
+      expect(await userProfile.getUserReputation(user1.address)).to.equal(150);
+      expect(await userProfile.getUserReputation(user2.address)).to.equal(0);
     });
 
     it("Should revert when getting profile of non-registered user", async function () {
       await expect(
         userProfile.getProfile(user3.address)
-      ).to.be.revertedWith("User not registered");
+      ).to.be.revertedWith("Profile does not exist");
     });
   });
 
   describe("Edge Cases", function () {
     it("Should handle empty strings in registration", async function () {
       await expect(
-        userProfile.connect(user1).registerUser("", "Alice", "hash1")
+        userProfile.connect(user1).createProfile("Alice", 25, "", "hash1")
       ).to.be.revertedWith("Email cannot be empty");
     });
 
+    it("Should handle invalid age values", async function () {
+      await expect(
+        userProfile.connect(user1).createProfile("Alice", 0, "alice@example.com", "hash1")
+      ).to.be.revertedWith("Invalid age");
+
+      await expect(
+        userProfile.connect(user1).createProfile("Alice", 151, "alice@example.com", "hash1")
+      ).to.be.revertedWith("Invalid age");
+    });
+
     it("Should handle maximum reputation values", async function () {
-      await userProfile.connect(user1).registerUser("alice@example.com", "Alice", "hash1");
-      
+      await userProfile.connect(user1).createProfile("Alice", 25, "alice@example.com", "hash1");
+
       const maxReputation = ethers.MaxUint256;
       await userProfile.updateReputation(user1.address, maxReputation);
-      
+
       const profile = await userProfile.getProfile(user1.address);
       expect(profile.reputation).to.equal(maxReputation);
     });

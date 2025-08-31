@@ -1,0 +1,36 @@
+{
+  "name": "desci-vue-frontend",
+  "version": "1.0.0",
+  "description": "Vue.js frontend for DeSci Platform",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview --port 3001"
+  },
+  "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.1",
+    "@codemirror/lang-python": "^6.1.3",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@vicons/fa": "^0.12.0",
+    "@vicons/ionicons5": "^0.12.0",
+    "axios": "^1.6.0",
+    "dayjs": "^1.11.10",
+    "naive-ui": "^2.36.0",
+    "vue": "^3.3.0",
+    "vue-codemirror": "^6.1.1",
+    "vue-pdf-embed": "^1.1.6",
+    "vue-router": "^4.2.0",
+    "vuedraggable": "^4.1.0",
+    "web3modal": "^1.9.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.4.0",
+    "vite": "^4.4.0",
+    "vite-plugin-node-polyfills": "^0.24.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

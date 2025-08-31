@@ -32,15 +32,19 @@ describe("DeSciNFTSimple Contract", function () {
     const tokenURI = "https://ipfs.io/ipfs/QmTestHash123";
 
     it("Should mint NFT successfully", async function () {
-      await expect(nft.mintResearchNFT(user1.address, tokenURI))
+      const title = "Test Research";
+      const description = "Test Description";
+      const researchType = "paper";
+
+      await expect(nft.mintResearchNFT(user1.address, title, description, tokenURI, researchType))
         .to.emit(nft, "Transfer")
         .withArgs(ethers.ZeroAddress, user1.address, 1)
         .and.to.emit(nft, "ResearchNFTMinted")
-        .withArgs(1, user1.address, tokenURI);
+        .withArgs(1, user1.address, title, researchType);
 
       expect(await nft.ownerOf(1)).to.equal(user1.address);
       expect(await nft.tokenURI(1)).to.equal(tokenURI);
-      expect(await nft.totalSupply()).to.equal(1);
+      expect(await nft.getTotalNFTs()).to.equal(1);
     });
 
     it("Should prevent non-owner from minting", async function () {

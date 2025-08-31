@@ -1,0 +1,32 @@
+{
+  "name": "desci-backend-api",
+  "version": "1.0.0",
+  "description": "Backend API server for DeSci Platform",
+  "main": "backend-api.js",
+  "scripts": {
+    "start": "node backend-api.js",
+    "dev": "nodemon backend-api.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "blockchain",
+    "desci",
+    "api",
+    "express",
+    "ethereum"
+  ],
+  "author": "DeSci Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "ethers": "^6.8.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

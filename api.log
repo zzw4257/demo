@@ -1,0 +1,42 @@
+[2025-08-31T03:05:06.095Z] ℹ️  正在启动DeSci Platform API服务器... 
+[2025-08-31T03:05:06.097Z] ℹ️  正在初始化区块链连接... {
+  "rpcUrl": "http://127.0.0.1:8545"
+}
+[2025-08-31T03:05:06.097Z] ℹ️  使用 ethers.js v6 JsonRpcProvider 
+[2025-08-31T03:05:06.103Z] ℹ️  区块链连接成功 {
+  "network": "unknown",
+  "chainId": "1337"
+}
+[2025-08-31T03:05:06.103Z] ℹ️  使用 ethers.js v6 Contract 
+[2025-08-31T03:05:06.105Z] ℹ️  智能合约初始化成功 
+[2025-08-31T03:05:06.122Z] ⚠️  合约调用验证失败，可能合约未部署或ABI不匹配: "execution reverted (no data present; likely require(false) occurred (action=\"call\", data=\"0x\", reason=\"require(false)\", transaction={ \"data\": \"0xfa23a7f3\", \"to\": \"0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.15.0)"
+[2025-08-31T03:05:06.123Z] ℹ️  服务器启动完成，耗时: 0ms 
+🚀 ============================================
+🚀         DeSci Platform API Server
+🚀 ============================================
+🚀 服务器地址: http://localhost:3000
+🚀 调试模式: ❌ 禁用
+🚀 区块链集成: ✅ 启用
+🚀
+🚀 API端点:
+🚀 GET  /health - 健康检查
+🚀 GET  /api/version - API版本信息
+🚀 GET  /api/debug - 调试信息 (需要启用调试模式)
+🚀 GET  /api/performance - 性能监控
+🚀 GET  /api/blockchain/status - 区块链状态
+🚀 GET  /api/projects - 获取项目列表 (支持分页、过滤、搜索)
+🚀 GET  /api/projects/:id - 获取项目详情
+🚀 POST /api/projects - 创建新项目
+🚀 GET  /api/stats - 获取平台统计
+🚀 POST /api/auth/login - 用户登录
+🚀
+🚀 前端应用:
+🚀 HTML版: http://localhost:3000
+🚀 Vue.js版: http://localhost:3001
+🚀
+🚀 环境变量:
+🚀 DEBUG=false
+🚀 BLOCKCHAIN_ENABLED=true
+🚀 RPC_URL=http://127.0.0.1:8545
+🚀 ============================================
+[2025-08-31T03:05:07.160Z] ⚠️  ⚠️ 健康检查失败 
