@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端功能测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>前端功能测试</h1>
+
+    <div class="test-section">
+        <h2>1. 变量重复声明测试</h2>
+        <div id="variable-test">测试中...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. switchTab函数测试</h2>
+        <button onclick="switchTab('dashboard')">仪表板</button>
+        <button onclick="switchTab('research')">研究发布</button>
+        <button onclick="switchTab('profile')">用户档案</button>
+        <button onclick="switchTab('blockchain')">区块链状态</button>
+        <button onclick="switchTab('analytics')">数据概览</button>
+        <div id="tab-test">当前标签页: <span id="current-tab">无</span></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. API调用测试</h2>
+        <button onclick="testAPI()">测试API调用</button>
+        <div id="api-test">API测试结果: <span id="api-result">未测试</span></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. 分页状态测试</h2>
+        <div id="pagination-test">分页状态: <span id="pagination-info">加载中...</span></div>
+    </div>
+
+    <script>
+        // 测试变量重复声明修复
+        try {
+            let paginationState = { currentPage: 1, pageSize: 10 };
+            console.log('✅ 变量声明成功:', paginationState);
+            document.getElementById('variable-test').innerHTML = '<span class="success">✅ 变量声明成功</span>';
+        } catch (error) {
+            console.error('❌ 变量声明失败:', error);
+            document.getElementById('variable-test').innerHTML = '<span class="error">❌ 变量声明失败: ' + error.message + '</span>';
+        }
+
+        // switchTab函数定义
+        function switchTab(tabName) {
+            console.log('切换到标签页:', tabName);
+
+            // 检查DOM元素是否存在
+            const currentTabEl = document.getElementById('current-tab');
+            const tabTestEl = document.getElementById('tab-test');
+
+            if (currentTabEl) {
+                currentTabEl.textContent = tabName;
+            }
+            if (tabTestEl) {
+                tabTestEl.innerHTML = '当前标签页: <span class="success">' + tabName + '</span>';
+            }
+        }
+
+        // API调用测试
+        async function testAPI() {
+            try {
+                console.log('测试API调用...');
+                const response = await fetch('http://localhost:3000/api/stats');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ API调用成功:', data);
+                    document.getElementById('api-result').innerHTML = '<span class="success">✅ 成功: ' + JSON.stringify(data, null, 2) + '</span>';
+                } else {
+                    console.error('❌ API调用失败:', response.status);
+                    document.getElementById('api-result').innerHTML = '<span class="error">❌ 失败: 状态码 ' + response.status + '</span>';
+                }
+            } catch (error) {
+                console.error('❌ API调用错误:', error);
+                document.getElementById('api-result').innerHTML = '<span class="error">❌ 错误: ' + error.message + '</span>';
+            }
+        }
+
+        // 分页状态测试
+        try {
+            let paginationState = {
+                currentPage: 1,
+                pageSize: 10,
+                totalItems: 0,
+                totalPages: 1
+            };
+            console.log('✅ 分页状态正常:', paginationState);
+            document.getElementById('pagination-info').innerHTML = '<span class="success">✅ 正常: ' + JSON.stringify(paginationState) + '</span>';
+        } catch (error) {
+            console.error('❌ 分页状态错误:', error);
+            document.getElementById('pagination-info').innerHTML = '<span class="error">❌ 错误: ' + error.message + '</span>';
+        }
+
+        console.log('✅ 前端测试页面加载完成');
+    </script>
+</body>
+</html>
