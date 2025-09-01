@@ -1,0 +1,151 @@
+{
+  "title": "区块链驱动的气候变化与药物研发研究",
+  "description": "利用区块链技术和零知识证明确保科学研究数据的完整性、可追溯性和隐私保护",
+  "story": {
+    "background": "在传统科研体系中，数据造假、论文重复、利益冲突等问题屡见不鲜。科研经费被滥用，研究结果无法验证，科学家之间的信任基础被破坏。",
+    "solution": "我们构建了一个去中心化的科学研究平台，利用区块链技术解决这些根本问题。",
+    "benefits": [
+      "🔒 数据不可篡改：所有研究数据上链后永久保存，无法修改",
+      "🌐 透明可追溯：研究过程完全透明，任何人都可以验证",
+      "🤝 去中心化协作：全球科学家无需信任第三方即可协作",
+      "💰 激励机制：通过代币奖励优质研究和同行评审",
+      "🔐 隐私保护：零知识证明确保数据隐私",
+      "⚡ 高效验证：智能合约自动验证研究结果"
+    ]
+  },
+  "research_projects": [
+    {
+      "id": 1,
+      "title": "气候变化趋势分析",
+      "researcher": "Dr. Sarah Chen",
+      "institution": "国际气候研究中心",
+      "funding": "NSF-2024-001 (250万美元)",
+      "domain": "climate_science",
+      "data_samples": [
+        {
+          "date": "2024-01-15",
+          "temperature": 15.23,
+          "co2_level": 412.45,
+          "location": "北极地区"
+        },
+        {
+          "date": "2024-02-20",
+          "temperature": 16.78,
+          "co2_level": 415.12,
+          "location": "亚马逊雨林"
+        }
+      ],
+      "blockchain_info": {
+        "contract_address": "0x1234567890abcdef...",
+        "nft_token_id": 1001,
+        "zk_proof_ids": [10001, 10002, 10003],
+        "data_hash": "a1b2c3d4e5f6...",
+        "verification_status": "已验证"
+      },
+      "impact": {
+        "citations": 0,
+        "downloads": 45,
+        "peer_reviews": 3,
+        "average_rating": 4.7
+      }
+    },
+    {
+      "id": 2,
+      "title": "新型抗癌药物筛选",
+      "researcher": "Dr. Michael Johnson",
+      "institution": "分子医药实验室",
+      "funding": "NIH-2024-002 (180万美元)",
+      "domain": "drug_discovery",
+      "data_samples": [
+        {
+          "compound_id": "DS_0001",
+          "smiles": "CC(=O)OC1=CC=CC=C1C(=O)O",
+          "molecular_weight": 180.16,
+          "toxicity_score": 0.23,
+          "target_protein": "EGFR",
+          "binding_affinity": -7.45
+        },
+        {
+          "compound_id": "DS_0002",
+          "smiles": "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",
+          "molecular_weight": 194.19,
+          "toxicity_score": 0.15,
+          "target_protein": "BRAF",
+          "binding_affinity": -8.12
+        }
+      ],
+      "blockchain_info": {
+        "contract_address": "0x234567890abcdef...",
+        "nft_token_id": 1002,
+        "zk_proof_ids": [10004, 10005],
+        "data_hash": "b2c3d4e5f6g7...",
+        "verification_status": "已验证"
+      },
+      "impact": {
+        "citations": 2,
+        "downloads": 123,
+        "peer_reviews": 5,
+        "average_rating": 4.8
+      }
+    },
+    {
+      "id": 3,
+      "title": "AI辅助医疗影像诊断",
+      "researcher": "Dr. Lisa Wang",
+      "institution": "人工智能医学中心",
+      "funding": "DARPA-2024-003 (320万美元)",
+      "domain": "ai_models",
+      "data_samples": [
+        {
+          "image_id": "IMG_000001",
+          "diagnosis": "正常",
+          "ai_confidence": 0.92,
+          "radiologist_agreement": 0.95,
+          "modality": "CT",
+          "body_region": "胸部"
+        },
+        {
+          "image_id": "IMG_000002",
+          "diagnosis": "可疑",
+          "ai_confidence": 0.78,
+          "radiologist_agreement": 0.82,
+          "modality": "MRI",
+          "body_region": "头部"
+        }
+      ],
+      "blockchain_info": {
+        "contract_address": "0x34567890abcdef...",
+        "nft_token_id": 1003,
+        "zk_proof_ids": [10006, 10007, 10008, 10009],
+        "data_hash": "c3d4e5f6g7h8...",
+        "verification_status": "已验证"
+      },
+      "impact": {
+        "citations": 5,
+        "downloads": 567,
+        "peer_reviews": 8,
+        "average_rating": 4.9
+      }
+    }
+  ],
+  "platform_statistics": {
+    "total_researchers": 156,
+    "total_researches": 89,
+    "total_datasets": 234,
+    "total_reviews": 445,
+    "total_nfts": 89,
+    "total_funding": "45.2M USD",
+    "data_integrity_score": 0.97,
+    "platform_uptime": "99.9%"
+  },
+  "web3_benefits": {
+    "decentralization": "无需信任中心化机构，消除单点故障",
+    "transparency": "所有交易和研究过程公开可查",
+    "immutability": "数据一旦记录不可篡改，确保历史真实性",
+    "incentives": "代币激励优质研究和同行评审",
+    "privacy": "零知识证明保护敏感数据隐私",
+    "efficiency": "智能合约自动化执行，提高效率",
+    "collaboration": "打破地理限制，促进全球协作",
+    "funding": "去中心化融资，公平分配科研资源"
+  }
+}
